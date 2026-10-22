@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RP Flask REST API - Parte 2 (SQLAlchemy)</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background: rgba(30, 41, 59, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 650px;
+            width: 100%;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .badge {
+            background: #6366f1;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+        h1 {
+            color: #818cf8;
+            font-size: 2.2rem;
+            margin: 0 0 10px 0;
+        }
+        p {
+            color: #94a3b8;
+            line-height: 1.6;
+            margin: 0;
+        }
+        .people-list {
+            list-style: none;
+            padding: 0;
+            margin: 25px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .person-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 14px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+        .person-item:hover {
+            transform: translateX(4px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+        .person-name {
+            font-weight: 600;
+            color: #f1f5f9;
+        }
+        .person-date {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        .btn {
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: inline-block;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+        }
+        .btn-outline {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <span class="badge">Tutorial Real Python - Parte 2</span>
+            <h1>Banco de Dados SQLite & SQLAlchemy</h1>
+            <p>API REST persistida em SQLite, com mapeamento ORM via Flask-SQLAlchemy e serialização com Marshmallow.</p>
+        </div>
+
+        <h3 style="color: #cbd5e1; margin-bottom: 12px;">Pessoas no Banco de Dados:</h3>
+        <ul class="people-list">
+            {% for person in people %}
+            <li class="person-item">
+                <span class="person-name">{{ person.fname }} {{ person.lname }}</span>
+                <span class="person-date">{{ person.timestamp.strftime('%Y-%m-%d %H:%M:%S') if person.timestamp else 'N/A' }}</span>
+            </li>
+            {% else %}
+            <li class="person-item" style="color: #94a3b8; justify-content: center;">
+                Nenhuma pessoa cadastrada ainda.
+            </li>
+            {% endfor %}
+        </ul>
+
+        <div class="btn-group">
+            <a href="/api/ui" class="btn">Abrir Swagger UI</a>
+            <a href="/api/people" class="btn btn-outline">Ver Endpoint JSON (/api/people)</a>
+        </div>
+    </div>
+</body>
+</html>

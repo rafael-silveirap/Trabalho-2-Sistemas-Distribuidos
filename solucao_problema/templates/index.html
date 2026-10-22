@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EventPass - Divulgação e Venda de Ingressos Online</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #090d16;
+            --bg-surface: #111827;
+            --bg-card: rgba(17, 24, 39, 0.75);
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --primary-glow: rgba(99, 102, 241, 0.35);
+            --secondary: #06b6d4;
+            --accent: #f43f5e;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.08);
+            --border-highlight: rgba(99, 102, 241, 0.3);
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.12) 0px, transparent 50%);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding-bottom: 60px;
+        }
+
+        header {
+            border-bottom: 1px solid var(--border);
+            background: rgba(9, 13, 22, 0.8);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text-main);
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.3rem;
+            box-shadow: 0 4px 15px var(--primary-glow);
+        }
+
+        .brand-text h1 {
+            font-size: 1.3rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand-text span {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: block;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn-swagger {
+            background: rgba(99, 102, 241, 0.12);
+            border: 1px solid var(--border-highlight);
+            color: #a5b4fc;
+            padding: 10px 18px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-swagger:hover {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 4px 15px var(--primary-glow);
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 24px;
+        }
+
+        .hero {
+            text-align: center;
+            margin: 30px 0 45px 0;
+        }
+
+        .hero h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #ffffff 30%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 650px;
+            margin: 0 auto 25px auto;
+            line-height: 1.6;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 12px 24px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .stat-val {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 12px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 30px;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            color: #fff;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Event Grid */
+        .event-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 24px;
+        }
+
+        .event-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+        }
+
+        .event-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--border-highlight);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .badge-cat {
+            background: rgba(99, 102, 241, 0.15);
+            color: #a5b4fc;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+
+        .badge-status {
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+
+        .status-ativo {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .status-esgotado {
+            background: rgba(244, 63, 94, 0.15);
+            color: var(--accent);
+            border: 1px solid rgba(244, 63, 94, 0.3);
+        }
+
+        .event-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .event-desc {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 18px;
+        }
+
+        .meta-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+            color: #cbd5e1;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .progress-box {
+            margin-bottom: 20px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .progress-bar-bg {
+            background: rgba(255, 255, 255, 0.1);
+            height: 6px;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            background: linear-gradient(90deg, var(--secondary) 0%, var(--primary) 100%);
+            height: 100%;
+            border-radius: 3px;
+        }
+
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 18px;
+            border-top: 1px solid var(--border);
+        }
+
+        .price-box span {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: block;
+        }
+
+        .price-val {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #38bdf8;
+        }
+
+        .btn-buy {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-buy:hover:not(:disabled) {
+            box-shadow: 0 4px 15px var(--primary-glow);
+            transform: translateY(-2px);
+        }
+
+        .btn-buy:disabled {
+            background: #334155;
+            color: #64748b;
+            cursor: not-allowed;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+            padding: 20px;
+        }
+
+        .modal-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal {
+            background: #111827;
+            border: 1px solid var(--border-highlight);
+            border-radius: 20px;
+            max-width: 500px;
+            width: 100%;
+            padding: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.4rem;
+            cursor: pointer;
+        }
+
+        .modal h3 {
+            font-size: 1.5rem;
+            margin-bottom: 6px;
+        }
+
+        .modal-subtitle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #cbd5e1;
+            margin-bottom: 6px;
+        }
+
+        .form-control {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-glow);
+        }
+
+        .price-summary {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            margin: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .summary-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .summary-val {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #38bdf8;
+        }
+
+        .btn-confirm {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: #fff;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-confirm:hover {
+            box-shadow: 0 6px 20px var(--primary-glow);
+            transform: translateY(-2px);
+        }
+
+        /* Ticket Card */
+        .ticket-voucher {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%);
+            border: 2px dashed var(--primary);
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .ticket-code {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: #38bdf8;
+            background: rgba(56, 189, 248, 0.1);
+            padding: 8px 14px;
+            border-radius: 8px;
+            display: inline-block;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="navbar">
+            <a href="/" class="brand">
+                <div class="brand-icon">🎟️</div>
+                <div class="brand-text">
+                    <h1>EventPass</h1>
+                    <span>Plataforma RESTful de Eventos & Ingressos</span>
+                </div>
+            </a>
+            <div class="nav-links">
+                <a href="/api/ui" class="btn-swagger" target="_blank">
+                    <span>⚡ Swagger UI (OpenAPI 3.0)</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <section class="hero">
+            <h2>Divulgação & Venda de Ingressos Online</h2>
+            <p>API construída com Python, Flask, Connexion e persistida em banco de dados SQLite com Flask-SQLAlchemy e serialização via Marshmallow.</p>
+            
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-val" id="stat-total-eventos">0</div>
+                    <div class="stat-label">Eventos Ativos</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-val" id="stat-total-vagas">0</div>
+                    <div class="stat-label">Vagas Disponíveis</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-val" id="stat-ingressos-vendidos">0</div>
+                    <div class="stat-label">Ingressos Emitidos</div>
+                </div>
+            </div>
+        </section>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('tab-eventos', this)">Eventos Disponíveis</button>
+            <button class="tab-btn" onclick="switchTab('tab-consultar', this)">Consultar / Cancelar Bilhete</button>
+            <button class="tab-btn" onclick="switchTab('tab-novo-evento', this)">+ Divulgar Novo Evento</button>
+        </div>
+
+        <!-- TAB 1: LISTAGEM DE EVENTOS -->
+        <div id="tab-eventos" class="tab-content active">
+            <div id="event-grid" class="event-grid">
+                <!-- Preenchido via JavaScript -->
+            </div>
+        </div>
+
+        <!-- TAB 2: CONSULTA / CANCELAMENTO DE BILHETE -->
+        <div id="tab-consultar" class="tab-content">
+            <div style="max-width: 600px; margin: 0 auto; background: var(--bg-card); padding: 30px; border-radius: 16px; border: 1px solid var(--border);">
+                <h3 style="margin-bottom: 8px;">Buscar Bilhete Emitido</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Informe o código único do ingresso (ex: <code>TKT-XXXXXXXX</code>) para verificar autenticidade ou solicitar estorno/cancelamento.</p>
+                <div class="form-group" style="display: flex; gap: 10px;">
+                    <input type="text" id="input-search-codigo" class="form-control" placeholder="TKT-XXXXXXXX" style="text-transform: uppercase;">
+                    <button class="btn-buy" onclick="consultarBilhete()">Buscar</button>
+                </div>
+                <div id="search-result"></div>
+            </div>
+        </div>
+
+        <!-- TAB 3: CADASTRO DE NOVO EVENTO -->
+        <div id="tab-novo-evento" class="tab-content">
+            <div style="max-width: 650px; margin: 0 auto; background: var(--bg-card); padding: 32px; border-radius: 16px; border: 1px solid var(--border);">
+                <h3 style="margin-bottom: 8px;">Cadastrar Novo Evento</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 24px;">Envie os dados do evento para a API REST via <code>POST /api/eventos</code>.</p>
+                
+                <form id="form-novo-evento" onsubmit="cadastrarEvento(event)">
+                    <div class="form-group">
+                        <label>Título do Evento *</label>
+                        <input type="text" id="novo-titulo" class="form-control" required placeholder="Ex: Simpósio de Redes e Sistemas Distribuídos">
+                    </div>
+                    <div class="form-group">
+                        <label>Descrição</label>
+                        <textarea id="novo-desc" class="form-control" rows="3" placeholder="Informações detalhadas sobre a atração..."></textarea>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div class="form-group">
+                            <label>Categoria *</label>
+                            <input type="text" id="novo-cat" class="form-control" required placeholder="Show, Congresso, Teatro...">
+                        </div>
+                        <div class="form-group">
+                            <label>Data e Horário *</label>
+                            <input type="text" id="novo-data" class="form-control" required placeholder="Ex: 2026-12-10 19:00">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Localização / Endereço *</label>
+                        <input type="text" id="novo-local" class="form-control" required placeholder="Ex: Centro de Convenções - Auditório Master">
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div class="form-group">
+                            <label>Preço Base (R$) *</label>
+                            <input type="number" id="novo-preco" step="0.01" class="form-control" required placeholder="100.00">
+                        </div>
+                        <div class="form-group">
+                            <label>Capacidade Total de Ingressos *</label>
+                            <input type="number" id="novo-capacidade" class="form-control" required placeholder="250">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-confirm" style="margin-top: 10px;">Divulgar Evento na API</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE COMPRA -->
+    <div id="modal-compra" class="modal-overlay">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <h3 id="modal-evento-titulo">Comprar Ingresso</h3>
+            <div id="modal-evento-meta" class="modal-subtitle">Local e data</div>
+
+            <div id="modal-body-form">
+                <div class="form-group">
+                    <label>Seu Nome Completo *</label>
+                    <input type="text" id="buy-nome" class="form-control" placeholder="Ex: Lucas Ferreira">
+                </div>
+                <div class="form-group">
+                    <label>Seu E-mail *</label>
+                    <input type="email" id="buy-email" class="form-control" placeholder="lucas@exemplo.com">
+                </div>
+                <div class="form-group">
+                    <label>Tipo de Ingresso</label>
+                    <select id="buy-tipo" class="form-control" onchange="updateModalPrice()">
+                        <option value="INTEIRA">INTEIRA (Valor Regular)</option>
+                        <option value="MEIA">MEIA-ENTRADA (50% de Desconto)</option>
+                        <option value="VIP">VIP (Acesso Premium 150%)</option>
+                    </select>
+                </div>
+
+                <div class="price-summary">
+                    <div>
+                        <div class="summary-label">Total a pagar:</div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted);" id="buy-tipo-detail">Tarifa Regular</div>
+                    </div>
+                    <div class="summary-val" id="buy-total-price">R$ 0,00</div>
+                </div>
+
+                <button class="btn-confirm" onclick="confirmarCompra()">Confirmar Pagamento e Emitir</button>
+            </div>
+
+            <div id="modal-body-success" style="display: none; text-align: center;">
+                <div style="font-size: 3rem; margin-bottom: 10px;">🎉</div>
+                <h4 style="color: var(--success); font-size: 1.3rem; margin-bottom: 6px;">Ingresso Emitido com Sucesso!</h4>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Guarde seu código exclusivo para validação na entrada do evento:</p>
+                
+                <div class="ticket-voucher">
+                    <div style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted);">Código do Bilhete</div>
+                    <div class="ticket-code" id="success-ticket-code">TKT-XXXXXXXX</div>
+                    <div style="margin-top: 10px; font-size: 0.85rem; color: #cbd5e1;">
+                        <p><strong>Comprador:</strong> <span id="success-comprador"></span></p>
+                        <p><strong>Categoria:</strong> <span id="success-tipo"></span></p>
+                        <p><strong>Valor Pago:</strong> <span id="success-valor"></span></p>
+                    </div>
+                </div>
+
+                <button class="btn-buy" style="margin-top: 20px; width: 100%;" onclick="closeModal()">Concluir</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentEvent = null;
+        let allEvents = [];
+
+        async function carregarEventos() {
+            try {
+                const res = await fetch('/api/eventos');
+                allEvents = await res.json();
+                renderEventos();
+                atualizarEstatisticas();
+            } catch (err) {
+                console.error("Erro ao buscar eventos:", err);
+            }
+        }
+
+        async function atualizarEstatisticas() {
+            try {
+                const resIngressos = await fetch('/api/ingressos');
+                const ingressos = await resIngressos.json();
+                
+                const totalEventosAtivos = allEvents.filter(e => e.status === 'ATIVO').length;
+                const totalVagas = allEvents.reduce((acc, e) => acc + e.ingressos_disponiveis, 0);
+                const ingressosEmitidos = ingressos.filter(i => i.status === 'CONFIRMADO').length;
+
+                document.getElementById('stat-total-eventos').innerText = totalEventosAtivos;
+                document.getElementById('stat-total-vagas').innerText = totalVagas;
+                document.getElementById('stat-ingressos-vendidos').innerText = ingressosEmitidos;
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        function renderEventos() {
+            const grid = document.getElementById('event-grid');
+            if (allEvents.length === 0) {
+                grid.innerHTML = '<p style="color: var(--text-muted); text-align: center; grid-column: 1 / -1;">Nenhum evento cadastrado no momento.</p>';
+                return;
+            }
+
+            grid.innerHTML = allEvents.map(e => {
+                const perc = Math.round(((e.capacidade_total - e.ingressos_disponiveis) / e.capacidade_total) * 100);
+                const isEsgotado = e.status === 'ESGOTADO' || e.ingressos_disponiveis <= 0;
+
+                return `
+                    <div class="event-card">
+                        <div>
+                            <div class="card-top">
+                                <span class="badge-cat">${e.categoria}</span>
+                                <span class="badge-status ${isEsgotado ? 'status-esgotado' : 'status-ativo'}">
+                                    ${isEsgotado ? 'ESGOTADO' : 'ATIVO'}
+                                </span>
+                            </div>
+                            <h3 class="event-title">${e.titulo}</h3>
+                            <p class="event-desc">${e.descricao || 'Sem descrição informada.'}</p>
+                            
+                            <div class="meta-list">
+                                <div class="meta-item">📅 ${e.data_hora}</div>
+                                <div class="meta-item">📍 ${e.local}</div>
+                            </div>
+
+                            <div class="progress-box">
+                                <div class="progress-header">
+                                    <span>Vagas: ${e.ingressos_disponiveis} de ${e.capacidade_total}</span>
+                                    <span>${perc}% vendido</span>
+                                </div>
+                                <div class="progress-bar-bg">
+                                    <div class="progress-bar-fill" style="width: ${perc}%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-footer">
+                            <div class="price-box">
+                                <span>A partir de</span>
+                                <div class="price-val">R$ ${(e.preco_base * 0.5).toFixed(2).replace('.', ',')}</div>
+                            </div>
+                            <button class="btn-buy" ${isEsgotado ? 'disabled' : ''} onclick="openBuyModal(${e.id})">
+                                ${isEsgotado ? 'Esgotado' : 'Comprar Ingresso'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function openBuyModal(eventoId) {
+            currentEvent = allEvents.find(e => e.id === eventoId);
+            if (!currentEvent) return;
+
+            document.getElementById('modal-evento-titulo').innerText = currentEvent.titulo;
+            document.getElementById('modal-evento-meta').innerText = `📍 ${currentEvent.local} • 📅 ${currentEvent.data_hora}`;
+            document.getElementById('modal-body-form').style.display = 'block';
+            document.getElementById('modal-body-success').style.display = 'none';
+            document.getElementById('buy-nome').value = '';
+            document.getElementById('buy-email').value = '';
+            document.getElementById('buy-tipo').value = 'INTEIRA';
+            updateModalPrice();
+
+            document.getElementById('modal-compra').classList.add('open');
+        }
+
+        function closeModal() {
+            document.getElementById('modal-compra').classList.remove('open');
+            carregarEventos();
+        }
+
+        function updateModalPrice() {
+            if (!currentEvent) return;
+            const tipo = document.getElementById('buy-tipo').value;
+            let mult = 1.0;
+            let desc = "Tarifa Regular (100%)";
+            if (tipo === 'MEIA') {
+                mult = 0.5;
+                desc = "Meia-Entrada Estudante/Idoso (50% OFF)";
+            } else if (tipo === 'VIP') {
+                mult = 1.5;
+                desc = "Acesso VIP com Lounge Exclusivo (+50%)";
+            }
+            const finalVal = (currentEvent.preco_base * mult).toFixed(2).replace('.', ',');
+            document.getElementById('buy-tipo-detail').innerText = desc;
+            document.getElementById('buy-total-price').innerText = `R$ ${finalVal}`;
+        }
+
+        async function confirmarCompra() {
+            const nome = document.getElementById('buy-nome').value.trim();
+            const email = document.getElementById('buy-email').value.trim();
+            const tipo = document.getElementById('buy-tipo').value;
+
+            if (!nome || !email) {
+                alert("Por favor, preencha seu nome e e-mail!");
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/ingressos/compra', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        evento_id: currentEvent.id,
+                        comprador_nome: nome,
+                        comprador_email: email,
+                        tipo: tipo
+                    })
+                });
+
+                if (res.status === 201) {
+                    const ticket = await res.json();
+                    document.getElementById('modal-body-form').style.display = 'none';
+                    document.getElementById('modal-body-success').style.display = 'block';
+                    document.getElementById('success-ticket-code').innerText = ticket.codigo_bilhete;
+                    document.getElementById('success-comprador').innerText = `${ticket.comprador_nome} (${ticket.comprador_email})`;
+                    document.getElementById('success-tipo').innerText = ticket.tipo;
+                    document.getElementById('success-valor').innerText = `R$ ${ticket.valor_pago.toFixed(2).replace('.', ',')}`;
+                } else {
+                    const err = await res.json();
+                    alert("Erro na compra: " + (err.detail || "Não foi possível concluir."));
+                }
+            } catch (e) {
+                alert("Erro de comunicação com a API");
+            }
+        }
+
+        async function consultarBilhete() {
+            const codigo = document.getElementById('input-search-codigo').value.trim().toUpperCase();
+            const div = document.getElementById('search-result');
+            if (!codigo) return;
+
+            div.innerHTML = '<p style="color: var(--text-muted); margin-top: 15px;">Buscando...</p>';
+
+            try {
+                const res = await fetch(`/api/ingressos/${codigo}`);
+                if (res.status === 200) {
+                    const ticket = await res.json();
+                    const isCancelado = ticket.status === 'CANCELADO';
+                    div.innerHTML = `
+                        <div class="ticket-voucher" style="margin-top: 20px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div class="ticket-code">${ticket.codigo_bilhete}</div>
+                                <span class="badge-status ${isCancelado ? 'status-esgotado' : 'status-ativo'}">${ticket.status}</span>
+                            </div>
+                            <h4 style="margin: 12px 0 6px 0; color: #fff;">${ticket.evento_titulo}</h4>
+                            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 12px;">Comprador: <strong>${ticket.comprador_nome}</strong> (${ticket.comprador_email})</p>
+                            <p style="color: var(--text-muted); font-size: 0.85rem;">Tipo: <strong>${ticket.tipo}</strong> • Valor Pago: <strong>R$ ${ticket.valor_pago.toFixed(2).replace('.', ',')}</strong></p>
+                            
+                            ${!isCancelado ? `
+                                <button class="btn-buy" style="background: var(--accent); margin-top: 15px; width: 100%;" onclick="cancelarBilhete('${ticket.codigo_bilhete}')">
+                                    Solicitar Cancelamento e Estorno
+                                </button>
+                            ` : '<p style="color: var(--accent); margin-top: 12px; font-size: 0.85rem;">❌ Este bilhete já foi cancelado e a vaga foi liberada.</p>'}
+                        </div>
+                    `;
+                } else {
+                    div.innerHTML = '<p style="color: var(--accent); margin-top: 15px;">Bilhete não encontrado no sistema.</p>';
+                }
+            } catch (err) {
+                div.innerHTML = '<p style="color: var(--accent); margin-top: 15px;">Erro ao consultar a API.</p>';
+            }
+        }
+
+        async function cancelarBilhete(codigo) {
+            if (!confirm(`Deseja realmente cancelar o bilhete ${codigo}?`)) return;
+
+            try {
+                const res = await fetch(`/api/ingressos/${codigo}/cancelar`, { method: 'POST' });
+                if (res.status === 200) {
+                    alert("Bilhete cancelado com sucesso!");
+                    consultarBilhete();
+                    carregarEventos();
+                } else {
+                    alert("Erro ao cancelar bilhete.");
+                }
+            } catch (e) {
+                alert("Erro de comunicação com o servidor.");
+            }
+        }
+
+        async function cadastrarEvento(e) {
+            e.preventDefault();
+            const novoEvento = {
+                titulo: document.getElementById('novo-titulo').value.trim(),
+                descricao: document.getElementById('novo-desc').value.trim(),
+                categoria: document.getElementById('novo-cat').value.trim(),
+                data_hora: document.getElementById('novo-data').value.trim(),
+                local: document.getElementById('novo-local').value.trim(),
+                preco_base: parseFloat(document.getElementById('novo-preco').value),
+                capacidade_total: parseInt(document.getElementById('novo-capacidade').value)
+            };
+
+            try {
+                const res = await fetch('/api/eventos', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(novoEvento)
+                });
+
+                if (res.status === 201) {
+                    alert("Evento cadastrado com sucesso!");
+                    document.getElementById('form-novo-evento').reset();
+                    switchTab('tab-eventos', document.querySelectorAll('.tab-btn')[0]);
+                    carregarEventos();
+                } else {
+                    const err = await res.json();
+                    alert("Erro ao cadastrar evento: " + (err.detail || "Verifique os dados."));
+                }
+            } catch (err) {
+                alert("Erro na requisição.");
+            }
+        }
+
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        document.addEventListener('DOMContentLoaded', carregarEventos);
+    </script>
+</body>
+</html>

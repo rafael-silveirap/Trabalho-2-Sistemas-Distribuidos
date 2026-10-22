@@ -1,0 +1,262 @@
+openapi: 3.0.0
+info:
+  title: "EventPass API - Divulgação e Venda de Ingressos Online"
+  description: "API RESTful para gestão de eventos, divulgação de atrações culturais/acadêmicas e venda online de ingressos com controle de capacidade e precificação dinâmica (Inteira, Meia, VIP)."
+  version: "1.0.0"
+
+servers:
+  - url: "/api"
+
+components:
+  schemas:
+    EventoInput:
+      type: "object"
+      required:
+        - titulo
+        - local
+        - preco_base
+        - capacidade_total
+        - data_hora
+      properties:
+        titulo:
+          type: "string"
+          example: "Festival de Música Indie 2026"
+        descricao:
+          type: "string"
+          example: "Dois dias de apresentações de bandas independentes e gastronomia artesanal."
+        categoria:
+          type: "string"
+          example: "Show"
+        data_hora:
+          type: "string"
+          example: "2026-11-20 19:30"
+        local:
+          type: "string"
+          example: "Parque das Artes - Palco Principal"
+        preco_base:
+          type: "number"
+          format: "float"
+          example: 120.0
+        capacidade_total:
+          type: "integer"
+          example: 500
+
+    EventoUpdate:
+      type: "object"
+      properties:
+        titulo:
+          type: "string"
+        descricao:
+          type: "string"
+        categoria:
+          type: "string"
+        data_hora:
+          type: "string"
+        local:
+          type: "string"
+        preco_base:
+          type: "number"
+          format: "float"
+
+    CompraIngressoInput:
+      type: "object"
+      required:
+        - evento_id
+        - comprador_nome
+        - comprador_email
+        - tipo
+      properties:
+        evento_id:
+          type: "integer"
+          example: 1
+        comprador_nome:
+          type: "string"
+          example: "Ana Clara Silva"
+        comprador_email:
+          type: "string"
+          format: "email"
+          example: "anaclara@email.com"
+        tipo:
+          type: "string"
+          enum: ["INTEIRA", "MEIA", "VIP"]
+          example: "MEIA"
+
+  parameters:
+    evento_id:
+      name: "evento_id"
+      in: path
+      required: true
+      description: "Identificador numérico do evento"
+      schema:
+        type: "integer"
+    codigo_bilhete:
+      name: "codigo_bilhete"
+      in: path
+      required: true
+      description: "Código único do bilhete emitido (ex: TKT-A1B2C3D4)"
+      schema:
+        type: "string"
+
+paths:
+  /eventos:
+    get:
+      tags:
+        - "Eventos"
+      summary: "Listar eventos disponíveis"
+      description: "Retorna a listagem de eventos com suporte a filtros opcionais por categoria e status."
+      operationId: "eventos.read_all"
+      parameters:
+        - name: "categoria"
+          in: query
+          required: false
+          schema:
+            type: "string"
+          description: "Filtrar por categoria (ex: Show, Congresso, Teatro, Workshop)"
+        - name: "status"
+          in: query
+          required: false
+          schema:
+            type: "string"
+          description: "Filtrar por status (ATIVO, ESGOTADO, ENCERRADO)"
+      responses:
+        "200":
+          description: "Lista de eventos retornada com sucesso"
+
+    post:
+      tags:
+        - "Eventos"
+      summary: "Cadastrar novo evento"
+      operationId: "eventos.create"
+      requestBody:
+        x-body-name: "evento"
+        required: true
+        description: "Dados para cadastro do evento"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EventoInput"
+      responses:
+        "201":
+          description: "Evento cadastrado com sucesso"
+        "400":
+          description: "Dados inválidos fornecidos"
+        "406":
+          description: "Já existe um evento com o mesmo título"
+
+  /eventos/{evento_id}:
+    get:
+      tags:
+        - "Eventos"
+      summary: "Obter detalhes de um evento"
+      operationId: "eventos.read_one"
+      parameters:
+        - $ref: "#/components/parameters/evento_id"
+      responses:
+        "200":
+          description: "Detalhes do evento retornados com sucesso"
+        "404":
+          description: "Evento não encontrado"
+
+    put:
+      tags:
+        - "Eventos"
+      summary: "Atualizar dados de um evento"
+      operationId: "eventos.update"
+      parameters:
+        - $ref: "#/components/parameters/evento_id"
+      requestBody:
+        x-body-name: "evento"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EventoUpdate"
+      responses:
+        "200":
+          description: "Evento atualizado com sucesso"
+        "404":
+          description: "Evento não encontrado"
+        "406":
+          description: "Conflito de título duplicado"
+
+    delete:
+      tags:
+        - "Eventos"
+      summary: "Excluir um evento"
+      operationId: "eventos.delete"
+      parameters:
+        - $ref: "#/components/parameters/evento_id"
+      responses:
+        "200":
+          description: "Evento excluído com sucesso"
+        "404":
+          description: "Evento não encontrado"
+
+  /ingressos:
+    get:
+      tags:
+        - "Ingressos e Vendas"
+      summary: "Listar ingressos emitidos"
+      operationId: "ingressos.read_all"
+      parameters:
+        - name: "email"
+          in: query
+          required: false
+          schema:
+            type: "string"
+          description: "Filtrar bilhetes pelo email do comprador"
+      responses:
+        "200":
+          description: "Lista de ingressos recuperada com sucesso"
+
+  /ingressos/compra:
+    post:
+      tags:
+        - "Ingressos e Vendas"
+      summary: "Comprar ingresso para um evento"
+      description: "Valida disponibilidade de vagas, calcula preço de acordo com a categoria (Inteira, Meia 50%, VIP 150%) e emite bilhete numerado."
+      operationId: "ingressos.comprar"
+      requestBody:
+        x-body-name: "compra"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompraIngressoInput"
+      responses:
+        "201":
+          description: "Ingresso adquirido e emitido com sucesso"
+        "400":
+          description: "Evento esgotado ou parâmetros inválidos"
+        "404":
+          description: "Evento não encontrado"
+
+  /ingressos/{codigo_bilhete}:
+    get:
+      tags:
+        - "Ingressos e Vendas"
+      summary: "Consultar ingresso por código"
+      operationId: "ingressos.read_one"
+      parameters:
+        - $ref: "#/components/parameters/codigo_bilhete"
+      responses:
+        "200":
+          description: "Detalhes do bilhete retornados"
+        "404":
+          description: "Bilhete não encontrado"
+
+  /ingressos/{codigo_bilhete}/cancelar:
+    post:
+      tags:
+        - "Ingressos e Vendas"
+      summary: "Cancelar bilhete e liberar vaga"
+      operationId: "ingressos.cancelar"
+      parameters:
+        - $ref: "#/components/parameters/codigo_bilhete"
+      responses:
+        "200":
+          description: "Bilhete cancelado e vaga restituída ao evento"
+        "400":
+          description: "Bilhete já se encontra cancelado"
+        "404":
+          description: "Bilhete não encontrado"
